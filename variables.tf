@@ -19,7 +19,7 @@ variable "aws_region" {
 }
 
 ## Adds variables to make more dynamic
-ariable "enable_dns_hostnames" {
+variable "enable_dns_hostnames" {
   type        = bool
   description = "Enable DNS hostnames in VPC"
   default     = true
