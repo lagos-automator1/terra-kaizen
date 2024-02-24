@@ -46,7 +46,8 @@ resource "aws_internet_gateway" "app" {
 # Replaced by... #
 resource "aws_subnet" "public_subnets" {
   count = var.vpc_public_subnet_count
-  cidr_block              = var.vpc_public_subnets_cidr_block[count.index]
+  cidr_block              = cidrsubnet(var.vpc_cidr_block, 8, count.index)
+  #cidr_block             = cidrsubnet(var.vpc_cidr_block, 8, (count.index % var.vpc_cidr_block)) #revisit
   vpc_id                  = aws_vpc.app.id
   availability_zone       = data.aws_availability_zones.available.names[count.index]
   map_public_ip_on_launch = var.map_public_ip_on_launch
