@@ -49,8 +49,8 @@ resource "aws_internet_gateway" "app" {
 
 # Replaced by... #
 resource "aws_subnet" "public_subnets" {
-  count = var.vpc_public_subnet_count
-  cidr_block              = cidrsubnet(var.vpc_cidr_block, 8, count.index)
+  count      = var.vpc_public_subnet_count
+  cidr_block = cidrsubnet(var.vpc_cidr_block, 8, count.index)
   #cidr_block             = cidrsubnet(var.vpc_cidr_block, 8, (count.index % var.vpc_cidr_block)) #revisit
   vpc_id                  = aws_vpc.app.id
   availability_zone       = data.aws_availability_zones.available.names[count.index]
@@ -78,8 +78,8 @@ resource "aws_route_table" "app" {
 
 ## updated rtb_assoc using count and count.index
 resource "aws_route_table_association" "app_public_subnets" {
-  count  =  var.vpc_public_subnet_count
-  subnet_id = aws_subnet.public_subnets[count.index].id
+  count          = var.vpc_public_subnet_count
+  subnet_id      = aws_subnet.public_subnets[count.index].id
   route_table_id = aws_route_table.app.id
 }
 

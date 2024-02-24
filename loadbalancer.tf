@@ -11,7 +11,7 @@ resource "aws_lb" "nginx" {
   subnets            = aws_subnet.public_subnets[*].id
   #subnets            = aws_subnet.public_subnets[count.index].id
   #subnets            = [aws_subnet.public_subnets.id]
-  depends_on         = [aws_s3_bucket_policy.web_bucket]
+  depends_on = [aws_s3_bucket_policy.web_bucket]
 
   enable_deletion_protection = false
 
