@@ -8,7 +8,9 @@ resource "aws_lb" "nginx" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_sg.id]
-  subnets            = [aws_subnet.public_subnet1.id, aws_subnet.public_subnet2.id]
+  subnets            = aws_subnet.public_subnets[*].id
+  #subnets            = aws_subnet.public_subnets[count.index].id
+  #subnets            = [aws_subnet.public_subnets.id]
   depends_on         = [aws_s3_bucket_policy.web_bucket]
 
   enable_deletion_protection = false
@@ -46,15 +48,24 @@ resource "aws_lb_listener" "nginx" {
   tags = local.common_tags
 }
 
+## Changes made to use count
 # aws_lb_target_group_attachment
-resource "aws_lb_target_group_attachment" "nginx1" {
-  target_group_arn = aws_lb_target_group.nginx.arn
-  target_id        = aws_instance.nginx1.id
-  port             = 80
-}
+#resource "aws_lb_target_group_attachment" "nginx1" {
+#  target_group_arn = aws_lb_target_group.nginx.arn
+#  target_id        = aws_instance.nginx1.id
+#  port             = 80
+#}
 
-resource "aws_lb_target_group_attachment" "nginx2" {
+#resource "aws_lb_target_group_attachment" "nginx2" {
+#  target_group_arn = aws_lb_target_group.nginx.arn
+#  target_id        = aws_instance.nginx2.id
+#  port             = 80
+#}
+
+## New value...
+resource "aws_lb_target_group_attachment" "nginx" {
+  count            = var.instance_count
   target_group_arn = aws_lb_target_group.nginx.arn
-  target_id        = aws_instance.nginx2.id
+  target_id        = aws_instance.nginx[count.index].id
   port             = 80
 }
