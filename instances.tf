@@ -74,8 +74,9 @@ resource "aws_instance" "nginx" {
     s3_bucket_name = aws_s3_bucket.web_bucket.id
   })
 
-  tags = local.common_tags
-
+  tags = merge(local.common_tags, {
+    Name = "${local.naming_prefix}-nginx-${count.index}"
+  })
 }
 
 
@@ -99,7 +100,10 @@ resource "aws_iam_role" "allow_nginx_s3" {
 }
 EOF
 
-  tags = local.common_tags
+  tags = merge(local.common_tags, {
+    Name = "${local.naming_prefix}-nginx"
+  })
+
 }
 
 resource "aws_iam_instance_profile" "nginx_profile" {
